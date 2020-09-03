@@ -15,7 +15,7 @@
 #include "porting_misc.h"
 #include "ble_cmd.h"
 #include "ble_event.h"
-
+#include "user.h"
 #define BIT0     (0x00000001UL)       ///< Bit 0 mask of an 32 bit integer
 #define BIT1     (0x00000002UL)       ///< Bit 1 mask of an 32 bit integer
 

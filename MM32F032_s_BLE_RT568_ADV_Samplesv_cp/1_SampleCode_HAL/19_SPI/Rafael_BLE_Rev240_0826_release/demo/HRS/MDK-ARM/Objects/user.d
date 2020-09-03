@@ -48,3 +48,4 @@
 .\objects\user.o: ..\..\..\include\ble_cmd.h
 .\objects\user.o: ..\..\..\porting\porting_misc.h
 .\objects\user.o: ..\..\..\include\ble_event.h
+.\objects\user.o: ..\inc\user.h

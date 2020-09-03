@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>MM32LINKCM3</Key>
-          <Name>-U6175B4CC7 -O206 -S0 -C0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0MM32xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:MM32F032R8T6$Flash\MM32xx_64.FLM)</Name>
+          <Name>-U7175B4CC7 -O206 -S0 -C0 -N00("ARM CoreSight SW-DP") -D00(0BB11477) -L00(0) -TO18 -TC10000000 -TP21 -TDS8007 -TDT0 -TDC1F -TIEFFFFFFFF -TIP8 -FO15 -FD20000000 -FC1000 -FN1 -FF0MM32xx_64.FLM -FS08000000 -FL010000 -FP0($$Device:MM32F032R8T6$Flash\MM32xx_64.FLM)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -148,7 +148,24 @@
           <Name>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0MM32xx_64 -FS08000000 -FL010000 -FP0($$Device:MM32F032R8T6$Flash\MM32xx_64.FLM))</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>166</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134255364</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\Rafael_BLE_MM32F032xx_s\../main.c\166</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -204,6 +221,16 @@
           <count>10</count>
           <WinNumber>1</WinNumber>
           <ItemText>RFIP_init_reg</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>UART_RX_BUF</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>UART_RX_BUF</ItemText>
         </Ww>
       </WatchWindow1>
       <Tracepoint>

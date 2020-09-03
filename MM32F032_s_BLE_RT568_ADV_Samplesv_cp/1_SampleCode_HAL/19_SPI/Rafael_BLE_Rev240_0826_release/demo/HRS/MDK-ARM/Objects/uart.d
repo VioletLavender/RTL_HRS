@@ -1,14 +1,14 @@
 .\objects\uart.o: ..\Peripheral\uart.c
 .\objects\uart.o: ..\Peripheral\inc\uart.h
+.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\uart.o: ..\inc\config.h
 .\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
-.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 .\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\MM32F032xx_s\HAL_lib\inc\HAL_conf.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\MM32F032xx_s\HAL_lib\inc\HAL_adc.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\MM32F032xx_s\Include\types.h
-.\objects\uart.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdbool.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\MM32F032xx_s\Include\mm32_device.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\MM32F032xx_s\Include\mm32_reg.h
 .\objects\uart.o: ..\..\..\..\..\..\3_Device\CMSIS\KEIL_CORE\core_cm0.h

@@ -8,8 +8,8 @@
 #define  DEMO_TRSPX_UART_SLAVE      2      //use UART0
 #define  DEMO_DTM                   9      //use UART0
 //Select a demo application
-#define  BLE_DEMO                   DEMO_HRS
-
+//#define  BLE_DEMO                   DEMO_HRS
+#define  BLE_DEMO    									DEMO_TRSPX_UART_SLAVE
 /* ************************************
  * Select a demo BLE Server Profile
  **************************************/

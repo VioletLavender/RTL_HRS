@@ -25,6 +25,12 @@
 #include "uart.h"
 
 
+bool transport_flag=false;
+uint8_t UART_RX_BUF[UART_REC_LEN];
+uint16_t UART_RX_STA=0; 
+
+
+
 /* Private typedef ----------------------------------------------------------*/
 /* Private define -----------------------------------------------------------*/
 /* Private macro ------------------------------------------------------------*/
@@ -86,7 +92,11 @@ void UARTx_Configure(UART_TypeDef           *UARTx,
         GPIO_InitStructure.GPIO_Pin   = GPIO_Pin_10;
         GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
         GPIO_Init(GPIOA, &GPIO_InitStructure);
-
+				
+				
+				UART_nvic_config();
+				UART_ITConfig(UART1, UART_IT_RXIEN, ENABLE);//开启串口接受中断
+				
         /* Enable UART */
         UART_Cmd(UART1, ENABLE);
     }
@@ -132,8 +142,64 @@ void UARTx_Configure(UART_TypeDef           *UARTx,
     {
     }
 }
+void UART_nvic_config(void)
+{
 
+		NVIC_InitTypeDef NVIC_InitStructure;
+	
+    NVIC_InitStructure.NVIC_IRQChannel = UART1_IRQn;
+    NVIC_InitStructure.NVIC_IRQChannelPriority = 3;		//子优先级3
+    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;			//IRQ通道使能
+    NVIC_Init(&NVIC_InitStructure);	//根据指定的参数初始化VIC寄存器
 
+}
+
+void UartSendByte(u8 dat)
+{
+    UART_SendData(UART1, dat);
+    while(!UART_GetFlagStatus(UART1, UART_FLAG_TXEPT));
+}
+
+void UART_TX_Send(u8 len,u8* buf)
+{
+    while(len--)
+        UartSendByte(*buf++);
+}
+
+void UART1_IRQHandler(void)                	//串口1中断服务程序
+{
+    u8 Res;
+    if(UART_GetITStatus(UART1, UART_IT_RXIEN)  != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
+    {
+				transport_flag=true;	
+        UART_ClearITPendingBit(UART1,UART_IT_RXIEN);
+        Res =UART_ReceiveData(UART1);	//读取接收到的数据
+        if((Res==0x0d)&&((UART_RX_STA&0X3FFF)>0))
+        {
+            UART_RX_STA|=0x4000;
+            UART_RX_BUF[UART_RX_STA&0X3FFF]=Res ;
+            UART_RX_STA++;
+        }
+        else if((UART_RX_STA&0x4000)&&((UART_RX_STA&0X3FFF)>0))//接收到了0x0d
+        {
+            if(Res==0x0a)
+            {
+                UART_RX_STA|=0x8000;	
+															
+            }
+            UART_RX_BUF[UART_RX_STA&0X3FFF]=Res ;
+            UART_RX_STA++;
+					
+        }
+        else{
+            UART_RX_BUF[UART_RX_STA&0X3FFF]=Res ;
+            UART_RX_STA++;
+            UART_RX_STA=UART_RX_STA&0X3FFF;
+            if((UART_RX_STA)>(UART_REC_LEN-1))
+                UART_RX_STA=0;//接收数据错误,重新开始接收	
+        }
+    } 
+} 
 /******************************************************************************
  * @brief       
  * @param       

@@ -53,3 +53,4 @@
 .\objects\main.o: ..\Peripheral\inc\systick.h
 .\objects\main.o: ..\Peripheral\inc\uart.h
 .\objects\main.o: ..\Peripheral\inc\spi.h
+.\objects\main.o: ..\inc\user.h

@@ -21,7 +21,8 @@
 #ifndef __UART_H__
 #define __UART_H__
 
-
+#include <stdint.h>
+#include <stdbool.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -37,13 +38,18 @@ extern "C" {
 #endif
 
 
+#define UART_REC_LEN  			200  	//定义最大接收字节数 200
+
+
+
+
 /* Includes -----------------------------------------------------------------*/
 #include "config.h"
-
 
 /* Exported constants -------------------------------------------------------*/
 /* Exported types -----------------------------------------------------------*/
 /* Exported macro -----------------------------------------------------------*/
+
 
 
 /* Exported functions -------------------------------------------------------*/
@@ -57,8 +63,9 @@ EXTERN void UARTx_Configure(UART_TypeDef           *UARTx,
 #ifdef __cplusplus
 }
 #endif
-
-
+void UART_nvic_config(void);
+void UartSendByte(uint8_t dat);
+void UartSendGroup(uint8_t* buf, uint8_t len);
 #endif
 
 

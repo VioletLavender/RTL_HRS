@@ -21,7 +21,7 @@
 #include "uart.h"
 #include "spi.h"
 #include "mcu_definition.h"
-
+#include "user.h"
 // use UART for TRSPX
 #if (BLE_DEMO==DEMO_TRSPX_UART_SLAVE)
 #include "host.h"   //put UART char to att_HDL_UDF01S_UDATN01 and notify_send
@@ -30,6 +30,12 @@ int BLEDemo_UartRxData_Handle(uint8_t *data, uint32_t dataLen);
 void UART02_IRQHandler(void);
 void UART_TX_Send(uint32_t len, uint8_t *ptr);        //show data on UART
 extern void trspx_send(uint8_t *data, uint16_t len);  //send out RF data
+
+
+extern bool transport_flag;
+extern uint8_t UART_RX_BUF[UART_REC_LEN];
+extern uint16_t UART_RX_STA; 
+
 
 #define TRSPX_DEFAULT_MTU   23
 uint32_t TRSPX_mtu = TRSPX_DEFAULT_MTU - 3;      //transparent data block length. att_HDL_UDF01S_UDATN01[] is also 20 bytes now!!!
@@ -76,7 +82,7 @@ void RF_Open()
 
 }
 
-
+uint8_t DATA_TEST[20]={1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0};
 /*!
    \brief main loop for initialization and BLE kernel
 */
@@ -115,8 +121,8 @@ int main(void)
     printf("-------------------\n");
 
     printf("Chip_ID=0x%x\n",ChipId_Get());
+		UART_TX_Send(20,DATA_TEST);
 #endif
-
     /* Set BD ADDR */
     bleAddrParam.addrType = PUBLIC_ADDR;
     bleAddrParam.addr[0] = 0x11;
@@ -154,6 +160,13 @@ int main(void)
             /* System enter Power Down mode & wait interrupt event. */
 //            System_PowerDown();
 #endif
+					if(transport_flag==true)
+					{
+						trspx_send(UART_RX_BUF,UART_RX_STA); 
+						memset(UART_RX_BUF,0,UART_RX_STA);
+						UART_RX_STA=0;
+						transport_flag=false;
+					}
         }
     }
 }
@@ -162,59 +175,59 @@ int main(void)
 //Demo application - Trspx UART slave
 #if (BLE_DEMO==DEMO_TRSPX_UART_SLAVE)
 
-//show data on UART
-void UART_TX_Send(uint32_t len, uint8_t *ptr)
-{
-    uint32_t i;
+////show data on UART
+//void UART_TX_Send(uint32_t len, uint8_t *ptr)
+//{
+//    uint32_t i;
 
-    for(i=0; i<len; i++)
-    {
-        UART_WRITE(UART0, *ptr++);
-        UART_WAIT_TX_EMPTY(UART0);
-    }
+//    for(i=0; i<len; i++)
+//    {
+//        UART_WRITE(UART0, *ptr++);
+//        UART_WAIT_TX_EMPTY(UART0);
+//    }
 
-    //add a new line
-    UART_WRITE(UART0, 0x0D);
-    UART_WRITE(UART0, 0x0A);
-    UART_WAIT_TX_EMPTY(UART0);
-}
+//    //add a new line
+//    UART_WRITE(UART0, 0x0D);
+//    UART_WRITE(UART0, 0x0A);
+//    UART_WAIT_TX_EMPTY(UART0);
+//}
 
 //received UART data ISR: send out data by RF
 /* Be careful that Central device should enable NOTIFY */
-static uint8_t uartBuffer[128];
+//static uint8_t uartBuffer[128];
 
-void UART02_IRQHandler(void)
-{
-    static uint32_t index = 0u;
-    uint8_t volatile uartReceiveByte;
+//void UART02_IRQHandler(void)
+//{
+//    static uint32_t index = 0u;
+//    uint8_t volatile uartReceiveByte;
 
-    uint32_t u32IntSts = UART0->INTSTS;
-    if(u32IntSts & UART_INTSTS_RDAINT_Msk)
-    {
-        while(UART_IS_RX_READY(UART0))
-        {
-            uartReceiveByte = UART_READ(UART0);
-            uartBuffer[index] = uartReceiveByte;
+//    uint32_t u32IntSts = UART0->INTSTS;
+//    if(u32IntSts & UART_INTSTS_RDAINT_Msk)
+//    {
+//        while(UART_IS_RX_READY(UART0))
+//        {
+//            uartReceiveByte = UART_READ(UART0);
+//            uartBuffer[index] = uartReceiveByte;
 
-            index++;
+//            index++;
 
-            if(index >= TRSPX_mtu)
-            {
-                trspx_send(uartBuffer,index);           //Send out UART data by RF
-                index = 0;
-            }
-            else if((uartBuffer[index - 1] == '\r') || (uartBuffer[index - 1] == '\n'))
-            {
-                if(index > 1)
-                {
-                    uint32_t length = (uint32_t)index - 1; //Remove '\r' or '\n'
-                    trspx_send(uartBuffer,length);         //Send out UART data by RF
-                }
-                index = 0;
-            }
-        }
-    }
-}
+//            if(index >= TRSPX_mtu)
+//            {
+//                trspx_send(uartBuffer,index);           //Send out UART data by RF
+//                index = 0;
+//            }
+//            else if((uartBuffer[index - 1] == '\r') || (uartBuffer[index - 1] == '\n'))
+//            {
+//                if(index > 1)
+//                {
+//                    uint32_t length = (uint32_t)index - 1; //Remove '\r' or '\n'
+//                    trspx_send(uartBuffer,length);         //Send out UART data by RF
+//                }
+//                index = 0;
+//            }
+//        }
+//    }
+//}
 
 
 #endif  //#if (BLE_DEMO==DEMO_TRSPX_UART_SLAVE)
