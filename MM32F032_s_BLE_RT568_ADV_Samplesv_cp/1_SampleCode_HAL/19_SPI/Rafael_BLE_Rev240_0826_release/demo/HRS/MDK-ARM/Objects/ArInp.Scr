@@ -1,0 +1,12 @@
+--create .\Objects\Rafael_BLE_MM32F032xx_s.lib
+.\objects\ble_cmd.o
+.\objects\ble_event.o
+.\objects\bonding_storage.o
+.\objects\hci.o
+.\objects\host.o
+.\objects\kernel.o
+.\objects\l2cap.o
+.\objects\ll.o
+.\objects\mmi.o
+.\objects\rf_phy.o
+.\objects\rffunction.o
