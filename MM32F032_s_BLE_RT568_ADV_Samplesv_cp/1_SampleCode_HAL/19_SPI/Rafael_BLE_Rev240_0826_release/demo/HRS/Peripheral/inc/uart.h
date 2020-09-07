@@ -39,7 +39,7 @@ extern "C" {
 
 
 #define UART_REC_LEN  			200  	//定义最大接收字节数 200
-
+#define RX_buffer_size 100
 
 
 
@@ -66,6 +66,7 @@ EXTERN void UARTx_Configure(UART_TypeDef           *UARTx,
 void UART_nvic_config(void);
 void UartSendByte(uint8_t dat);
 void UartSendGroup(uint8_t* buf, uint8_t len);
+void UART_TX_Send(uint32_t len, uint8_t *ptr);        //show data on UART
 #endif
 
 

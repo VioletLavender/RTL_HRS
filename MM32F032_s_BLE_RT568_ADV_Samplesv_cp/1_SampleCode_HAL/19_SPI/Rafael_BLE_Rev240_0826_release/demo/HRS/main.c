@@ -82,10 +82,11 @@ void RF_Open()
 
 }
 
-uint8_t DATA_TEST[20]={1,2,3,4,5,6,7,8,9,0,1,2,3,4,5,6,7,8,9,0};
+uint8_t DATA_TEST[20]={0x6D ,0x6D ,0x33 ,0x32 ,0x5F ,0x74 ,0x65 ,0x73 ,0x74};
 /*!
    \brief main loop for initialization and BLE kernel
 */
+extern u8 gSendBuff[100];
 int main(void)
 {
     BLE_Addr_Param bleAddrParam;
@@ -106,6 +107,8 @@ int main(void)
     /* Config UART1 with parameter(115200, N, 8, 1) for printf */
     UARTx_Configure(DEBUG_UART, 115200, UART_WordLength_8b, UART_StopBits_1,  \
                     UART_Parity_No);
+    DMA_Config(DMA1_Channel3, (u32)&UART1->RDR, (u32)gSendBuff, 100);
+
 
 #ifndef _HCI_HW_
     //UART_Open(UART0, 115200);
@@ -155,18 +158,23 @@ int main(void)
         if(Ble_Kernel_Root() == BLESTACK_STATUS_FREE)
         {
             BleApp_Main();
+					if(transport_flag==true)
+					{
+//						UART_TX_Send(sizeof(gSendBuff),gSendBuff); 
+//						trspx_send(DATA_TEST,sizeof(DATA_TEST)); 
+//						memset(gSendBuff,0,sizeof(gSendBuff));
+//						transport_flag=false;
+//						memset(gSendBuff,0,20);
+//				DMA_Cmd(DMA1_Channel3, DISABLE);
+//				exDMA_SetMemoryAddress(DMA1_Channel3,(u32)gSendBuff);
+//				DMA_Enable(DMA1_Channel3);
+					}
 
 #if (BLE_DEMO!=DEMO_TRSPX_UART_SLAVE)
             /* System enter Power Down mode & wait interrupt event. */
 //            System_PowerDown();
 #endif
-					if(transport_flag==true)
-					{
-						trspx_send(UART_RX_BUF,UART_RX_STA); 
-						memset(UART_RX_BUF,0,UART_RX_STA);
-						UART_RX_STA=0;
-						transport_flag=false;
-					}
+
         }
     }
 }
